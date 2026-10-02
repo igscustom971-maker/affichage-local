@@ -8,172 +8,216 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #171B36;
-    --bg2: #2A1140;
-    --pink: #FF1E8E;
-    --navy: #3E63F0;
-    --orange: #FF8A3D;
-    --yellow: #FFD23F;
-    --paper: #FFF8ED;
-    --muted: #B9B6DC;
-  }
+:root{
+  --cream:#F7F0E4;
+  --cream2:#FFF9F0;
+  --navy:#1E1E4B;
+  --navy2:#121331;
+  --pink:#FF1E8E;
+  --blue:#3E63F0;
+  --orange:#FF8A3D;
+  --green:#5BBE72;
+  --ink:#191936;
+  --muted:#68677D;
+  --white:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  width:100%;height:100%;background:var(--cream);color:var(--navy);
+  font-family:'Poppins',sans-serif;overflow:hidden;
+}
+#carousel{
+  display:flex;width:100vw;height:100vh;overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scroll-behavior:smooth;cursor:grab;
+}
+#carousel.dragging{cursor:grabbing;scroll-behavior:auto}
+#carousel::-webkit-scrollbar{display:none}
+.slide{
+  position:relative;flex:0 0 100vw;width:100vw;height:100vh;
+  scroll-snap-align:start;overflow:hidden;background:var(--cream);
+}
+.tropical-deco{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  z-index:1;pointer-events:none;user-select:none;
+  opacity:.96;
+}
+.slide::before{
+  content:"";position:absolute;width:43vw;height:43vw;border-radius:50%;
+  right:-18vw;top:-20vw;background:rgba(255,30,142,.10);
+}
+.slide::after{
+  content:"";position:absolute;width:32vw;height:32vw;border-radius:50%;
+  left:-20vw;bottom:-20vw;background:rgba(62,99,240,.08);
+}
+.grain{
+  position:absolute;inset:0;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.slide-inner{
+  position:relative;z-index:3;width:100%;height:100%;padding:7vh 7vw;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.logo-badge{
+  position:absolute;top:5vh;right:6vw;z-index:6;height:7vh;border-radius:50%;
+  filter:drop-shadow(0 8px 18px rgba(30,30,75,.12));
+}
+#s-hero .logo-badge{height:13vh;right:6vw}
+.tag{
+  display:inline-flex;width:max-content;padding:.65em 1.15em;margin-bottom:2.2vh;
+  border-radius:999px;background:var(--navy);color:#fff;font-size:1.05vw;
+  font-weight:700;letter-spacing:.02em;box-shadow:0 10px 24px rgba(30,30,75,.14);
+}
+h1{
+  font-family:'Bebas Neue',sans-serif;font-weight:400;line-height:.92;
+  letter-spacing:.01em;
+}
+p.lead{
+  color:var(--muted);font-size:1.35vw;line-height:1.45;max-width:47ch;
+  margin-top:2vh;font-weight:500;
+}
+.accent{color:var(--pink)}
+.pill{
+  display:inline-flex;padding:.5em .9em;border-radius:999px;background:#fff;
+  border:1px solid rgba(30,30,75,.10);box-shadow:0 8px 20px rgba(30,30,75,.07);
+  color:var(--navy);font-size:.95vw;font-weight:700;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* HERO */
+#s-hero h1{font-size:7.5vw;color:var(--navy);max-width:8.5ch}
+#s-hero h1 span{color:var(--pink)}
+#s-hero .lead{max-width:42ch}
+#s-hero .loc{
+  position:absolute;left:7vw;bottom:5vh;z-index:5;font-size:1vw;
+  color:var(--muted);font-weight:600;
+}
+#s-hero .heroimg{
+  position:absolute;right:7vw;top:18vh;width:31vw;max-height:67vh;
+  object-fit:contain;z-index:2;
+  filter:drop-shadow(0 35px 45px rgba(30,30,75,.20));
+}
+.hero-orbit{
+  position:absolute;width:38vw;height:38vw;right:3.5vw;top:15vh;
+  border:1px solid rgba(255,30,142,.35);border-radius:50%;z-index:1;
+}
+.hero-orbit:before{
+  content:"";position:absolute;inset:3.5vw;border:1px dashed rgba(62,99,240,.28);
+  border-radius:50%;
+}
+.hero-sticker{
+  position:absolute;right:7vw;bottom:12vh;z-index:5;background:var(--pink);
+  color:#fff;width:8vw;height:8vw;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;text-align:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1.25vw;line-height:1.05;
+  transform:rotate(7deg);box-shadow:0 18px 35px rgba(255,30,142,.25);
+}
 
-  html, body {
-    width: 100%; height: 100%;
-    background: var(--bg);
-    color: var(--paper);
-    font-family: 'Poppins', sans-serif;
-    overflow: hidden;
-  }
+/* CONFIG / BOUTIQUE / AVIS */
+#s-config .slide-inner,#s-boutique .slide-inner,#s-avis .slide-inner{
+  flex-direction:row;align-items:center;justify-content:space-between;gap:5vw;
+}
+#s-config .txt{max-width:35vw}
+#s-config h1,#s-boutique h1{font-size:4.4vw}
+#s-config .shot{
+  width:40vw;border-radius:26px;overflow:hidden;background:#fff;border:8px solid #fff;
+  box-shadow:0 30px 70px rgba(30,30,75,.18);transform:rotate(1.5deg);
+}
+#s-config .shot img{width:100%;display:block}
+#s-config .qrblock,#s-boutique .qrblock{
+  display:flex;align-items:center;gap:1.2vw;margin-top:3vh;
+}
+#s-config .qrbox,#s-boutique .qrbox{
+  background:#fff;padding:.8vw;border-radius:17px;
+  box-shadow:0 12px 30px rgba(30,30,75,.12);
+}
+#s-config .qrbox img,#s-boutique .qrbox img{display:block;width:7vw;height:7vw}
+#s-config .qrblock .txt2,#s-boutique .qrblock .txt2{
+  color:var(--muted);font-size:1.05vw;line-height:1.35;max-width:17ch;font-weight:600;
+}
+#s-boutique .txt{max-width:29vw}
+#s-boutique .emojirow{font-size:2vw;margin-bottom:1.2vh}
+#s-boutique .gallery{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1.2vw;width:40vw;
+}
+#s-boutique .card{
+  position:relative;overflow:hidden;aspect-ratio:1/1;border-radius:24px;background:#fff;
+  border:7px solid #fff;box-shadow:0 18px 40px rgba(30,30,75,.13);
+}
+#s-boutique .card:nth-child(1){transform:rotate(-1.5deg)}
+#s-boutique .card:nth-child(2){transform:rotate(1.5deg)}
+#s-boutique .card:nth-child(3){transform:rotate(1deg)}
+#s-boutique .card:nth-child(4){transform:rotate(-1deg)}
+#s-boutique .card img{width:100%;height:100%;object-fit:cover;display:block}
+#s-boutique .card:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 62%,rgba(30,30,75,.25));
+}
+#s-boutique .card .price{
+  position:absolute;bottom:.7vw;left:.7vw;z-index:2;background:var(--pink);
+  color:#fff;font-size:.9vw;font-weight:700;padding:.42em .85em;border-radius:999px;
+}
 
-  #carousel {
-    display: flex;
-    width: 100vw; height: 100vh;
-    overflow-x: auto; overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    cursor: grab;
-  }
-  #carousel.dragging { cursor: grabbing; scroll-behavior: auto; }
-  #carousel::-webkit-scrollbar { display: none; }
+/* AVIS */
+#s-avis .left{max-width:51vw}
+#s-avis .glabel{display:flex;align-items:center;gap:.7vw;margin-bottom:1.2vh}
+#s-avis .gtext{color:var(--muted);font-size:1.15vw;font-weight:700}
+#s-avis .gdots{display:flex;gap:4px}
+#s-avis .gdots span{width:.75vw;height:.75vw;border-radius:50%;display:inline-block}
+#s-avis .stat{display:flex;align-items:baseline;gap:.8vw;margin-bottom:1.5vh}
+#s-avis .stat .num{
+  font-family:'Bebas Neue',sans-serif;font-size:7vw;line-height:.9;color:var(--pink);
+}
+#s-avis .stat .cnt{font-size:1.25vw;color:var(--muted);font-weight:600}
+#s-avis .quote{font-size:2.1vw;line-height:1.25;font-weight:600;max-width:24ch}
+#s-avis .author{color:var(--muted);font-size:1vw;margin-top:1.7vh}
+#s-avis .right{text-align:center}
+#s-avis .qrbox{background:#fff;padding:1.3vw;border-radius:25px;box-shadow:0 20px 45px rgba(30,30,75,.12)}
+#s-avis .qrbox img{display:block;width:15vw;height:15vw}
+#s-avis .stars{color:var(--orange);font-size:1.7vw;letter-spacing:.15em;margin-top:1vh}
+#s-avis .cta{font-size:1.15vw;font-weight:700;margin-top:1vh}
 
-  .slide {
-    position: relative;
-    flex: 0 0 100vw; width: 100vw; height: 100vh;
-    scroll-snap-align: start;
-    background: radial-gradient(ellipse at 20% 20%, var(--bg2) 0%, var(--bg) 55%);
-  }
+/* SOCIAL */
+#s-social .slide-inner{align-items:center;text-align:center}
+#s-social h1{font-size:4.8vw;max-width:15ch;color:var(--navy)}
+#s-social .qr-row{display:flex;gap:2.5vw;justify-content:center;margin-top:4vh}
+#s-social .qr-item{text-align:center}
+#s-social .icon-circle{
+  width:4.2vw;height:4.2vw;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:2vw;margin:0 auto 1.1vh;color:#fff;
+  box-shadow:0 12px 25px rgba(30,30,75,.12);
+}
+#s-social .qrbox{background:#fff;padding:.8vw;border-radius:18px}
+#s-social .qrbox img{display:block;width:9vw;height:9vw}
+#s-social .label{margin-top:1.1vh;font-size:1.1vw;font-weight:700}
+#s-social .handle{font-size:.9vw;color:var(--muted)}
 
-  .grain {
-    position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+/* NAV */
+.navbtn{
+  position:fixed;top:50%;transform:translateY(-50%);width:3.1vw;height:3.1vw;
+  border-radius:50%;background:rgba(30,30,75,.9);border:2px solid rgba(255,255,255,.5);
+  color:#fff;font-size:1.7vw;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10;box-shadow:0 12px 25px rgba(30,30,75,.15);transition:.2s;
+}
+.navbtn:hover{background:var(--pink);transform:translateY(-50%) scale(1.05)}
+#prevBtn{left:1.8vw}#nextBtn{right:1.8vw}
+.dots{
+  position:fixed;bottom:2.5vh;left:50%;transform:translateX(-50%);
+  display:flex;gap:9px;z-index:10;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;background:rgba(30,30,75,.22);
+  cursor:pointer;border:none;
+}
+.dot.active{width:24px;border-radius:999px;background:var(--pink)}
 
-  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.45; pointer-events: none; }
+@media(max-width:900px){
+  .tag{font-size:2vw}p.lead{font-size:2.5vw}
+  #s-hero h1{font-size:11vw}.hero-sticker{font-size:2vw}
+  #s-hero .heroimg{width:35vw}
+  #s-config h1,#s-boutique h1{font-size:6vw}
+  #s-config .txt,#s-boutique .txt{max-width:42vw}
+  #s-config .qrblock .txt2,#s-boutique .qrblock .txt2{font-size:1.8vw}
+}
 
-  .slide-inner {
-    position: relative; z-index: 2;
-    width: 100%; height: 100%;
-    padding: 6vh 6vw;
-    display: flex; flex-direction: column; justify-content: center;
-  }
-
-  .tag {
-    display: inline-flex; align-items: center; gap: 0.4em;
-    font-size: 1.1vw; letter-spacing: 0.02em;
-    color: var(--paper); background: linear-gradient(120deg, var(--pink), var(--navy));
-    padding: 0.5em 1.1em; margin-bottom: 2vh;
-    align-self: flex-start;
-    font-weight: 600; border-radius: 100px;
-  }
-
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-weight: 400;
-    line-height: 0.92;
-    letter-spacing: 0.01em;
-  }
-
-  p.lead { font-size: 1.5vw; color: var(--muted); max-width: 46ch; margin-top: 1.6vh; font-weight: 400; }
-
-  .logo-badge { position: absolute; top: 5vh; right: 6vw; z-index: 3; height: 6vh; opacity: 0.95; border-radius: 50%; }
-  #s-hero .logo-badge { height: 14vh; right: 5vw; }
-
-  /* ---- Slide 1 : Hero ---- */
-  #s-hero .heroimg {
-    position: absolute; right: 4vw; top: 24vh; width: 24vw; z-index: 1;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
-    opacity: 0.97;
-  }
-  #s-hero h1 { font-size: 7.6vw; color: var(--paper); }
-  #s-hero h1 span { color: var(--pink); }
-  #s-hero .loc { position: absolute; bottom: 6vh; left: 6vw; font-size: 1.2vw; color: var(--muted); z-index: 2; }
-
-  /* ---- Slide 2 : Configurateur ---- */
-  #s-config .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 3vw; }
-  #s-config .txt { max-width: 34vw; }
-  #s-config h1 { font-size: 3.8vw; }
-  #s-config .shot {
-    border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-    border: 4px solid rgba(255,255,255,0.12);
-    width: 34vw;
-  }
-  #s-config .shot img { width: 100%; display: block; }
-  #s-config .qrblock { display: flex; align-items: center; gap: 1vw; margin-top: 3vh; }
-  #s-config .qrbox { background: var(--paper); padding: 0.8vw; border-radius: 14px; }
-  #s-config .qrbox img { display: block; width: 7vw; height: 7vw; }
-  #s-config .qrblock .txt2 { font-size: 1.15vw; color: var(--muted); max-width: 16ch; }
-
-  /* ---- Slide 3 : Boutique en ligne ---- */
-  #s-boutique .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 3vw; }
-  #s-boutique .txt { max-width: 26vw; }
-  #s-boutique h1 { font-size: 4vw; }
-  #s-boutique .emojirow { font-size: 2.4vw; margin-bottom: 1.5vh; }
-  #s-boutique .qrblock { display: flex; align-items: center; gap: 1vw; margin-top: 3vh; }
-  #s-boutique .qrbox { background: var(--paper); padding: 0.8vw; border-radius: 14px; }
-  #s-boutique .qrbox img { display: block; width: 7vw; height: 7vw; }
-  #s-boutique .qrblock .txt2 { font-size: 1.15vw; color: var(--muted); max-width: 16ch; }
-  #s-boutique .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2vw; width: 34vw; }
-  #s-boutique .card { border-radius: 18px; overflow: hidden; background: #1F2444; position: relative; aspect-ratio: 3/4; }
-  #s-boutique .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  #s-boutique .card .price {
-    position: absolute; bottom: 0.7vw; left: 0.7vw;
-    background: var(--paper); color: var(--bg);
-    font-size: 0.9vw; font-weight: 700; padding: 0.3em 0.8em; border-radius: 100px;
-  }
-
-  /* ---- Slide 4 : Avis Google ---- */
-  #s-avis .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; }
-  #s-avis .left { max-width: 50vw; }
-  #s-avis .glabel { display: flex; align-items: center; gap: 0.6vw; margin-bottom: 1.5vh; }
-  #s-avis .gdots { display: flex; gap: 3px; }
-  #s-avis .gdots span { width: 0.8vw; height: 0.8vw; border-radius: 50%; display: inline-block; }
-  #s-avis .glabel .gtext { font-size: 1.3vw; font-weight: 600; color: var(--muted); }
-  #s-avis .stat { display: flex; align-items: baseline; gap: 0.6vw; margin-bottom: 2vh; }
-  #s-avis .stat .num { font-family: 'Bebas Neue', sans-serif; font-size: 5.5vw; color: var(--yellow); line-height: 1; }
-  #s-avis .stat .cnt { font-size: 1.3vw; color: var(--muted); }
-  #s-avis .quote { font-size: 2vw; line-height: 1.3; font-weight: 500; }
-  #s-avis .author { color: var(--muted); font-size: 1.1vw; margin-top: 2vh; }
-  #s-avis .right { text-align: center; }
-  #s-avis .qrbox { background: var(--paper); padding: 1.6vw; border-radius: 22px; display: inline-block; }
-  #s-avis .qrbox img { display: block; width: 16vw; height: 16vw; }
-  #s-avis .cta { font-size: 1.25vw; font-weight: 600; margin-top: 1.4vh; }
-  #s-avis .stars { color: var(--yellow); font-size: 1.7vw; letter-spacing: 0.15em; margin-top: 0.8vh; }
-
-  /* ---- Slide 5 : Suis-nous ---- */
-  #s-social .slide-inner { align-items: center; text-align: center; }
-  #s-social h1 { font-size: 4vw; margin-bottom: 4vh; max-width: 18ch; }
-  .qr-row { display: flex; gap: 2.5vw; justify-content: center; }
-  .qr-item { text-align: center; }
-  .qr-item .icon-circle {
-    width: 4.5vw; height: 4.5vw; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.2vw; margin: 0 auto 1.2vh;
-  }
-  .qr-item .qrbox { background: var(--paper); padding: 1vw; border-radius: 16px; }
-  .qr-item .qrbox img { display: block; width: 9.5vw; height: 9.5vw; }
-  .qr-item .label { margin-top: 1.2vh; font-size: 1.2vw; font-weight: 600; }
-  .qr-item .handle { font-size: 0.95vw; color: var(--muted); }
-
-  /* ---- Navigation ---- */
-  .navbtn {
-    position: fixed; top: 50%; transform: translateY(-50%);
-    width: 3.2vw; height: 3.2vw; border-radius: 50%;
-    background: rgba(255,255,255,0.12); border: none; color: var(--paper);
-    font-size: 1.6vw; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10; backdrop-filter: blur(4px);
-    transition: background 0.2s;
-  }
-  .navbtn:hover { background: rgba(255,255,255,0.25); }
-  #prevBtn { left: 2vw; }
-  #nextBtn { right: 2vw; }
-
-  .dots { position: fixed; bottom: 3vh; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); cursor: pointer; border: none; }
-  .dot.active { background: var(--pink); }
 </style>
 </head>
 <body>
@@ -210,12 +254,15 @@ const CONFIG = {
   <!-- Slide 1 — Hero -->
   <section class="slide" id="s-hero">
     <div class="grain"></div>
+    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <img class="logo-badge" src="https://igscustom.fr/wp-content/uploads/2026/05/IGS-CUSTOM-BAR-LOGO.png" alt="IGS Custom Bar">
-    <img class="heroimg" src="https://igscustom.fr/wp-content/uploads/2026/03/tshirt-perso-compresse-1024x1024.png" alt="">
+    <div class="hero-orbit"></div>
+<img class="heroimg" src="https://igscustom.fr/wp-content/uploads/2026/03/tshirt-perso-compresse-1024x1024.png" alt="">
+<div class="hero-sticker">CRÉE<br>TON<br>STYLE</div>
     <div class="slide-inner">
       <span class="tag">🌺 Personnalisation textile</span>
-      <h1>Express<br>Yourself,<br><span>crée ton style.</span></h1>
-      <p class="lead">🎨 Impression DTF, collections limitées, livrées en Guadeloupe, Martinique, Guyane et dans toute la Caraïbe.</p>
+      <h1>Exprime<br>ton <span>style.</span></h1>
+      <p class="lead">Impression DTF, textile personnalisé et créations sur mesure. Donne vie à tes idées avec IGS Custom Bar.</p>
     </div>
     <div class="loc">📍 62 Rue Louis Vatable — Pointe-à-Pitre</div>
   </section>
@@ -223,14 +270,15 @@ const CONFIG = {
   <!-- Slide 2 — Configurateur -->
   <section class="slide" id="s-config">
     <div class="grain"></div>
+    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
       <div class="txt">
-        <span class="tag">✨ En ligne</span>
-        <h1>Compose ta pièce et vois l'aperçu en direct</h1>
-        <p class="lead">🖌️ Choisis ton produit, ta couleur, ajoute ton design — sans minimum de commande.</p>
+        <span class="tag">CRÉATION EN LIGNE</span>
+        <h1>Ton design.<br><span class="accent">Ton style.</span></h1>
+        <p class="lead">Choisis ton produit, ta couleur et ajoute ton design. Visualise ton projet directement avant de commander.</p>
         <div class="qrblock">
           <div class="qrbox"><img id="qr-config" alt="QR code configurateur"></div>
-          <div class="txt2">📱 Scanne pour essayer depuis ton téléphone</div>
+          <div class="txt2">SCANNE & CRÉE</div>
         </div>
       </div>
       <div class="shot"><img src="https://igscustom971-maker.github.io/affichage-local/igs-configurateur-preview.png" alt="Aperçu du configurateur en ligne"></div>
@@ -240,15 +288,16 @@ const CONFIG = {
   <!-- Slide 3 — Boutique en ligne -->
   <section class="slide" id="s-boutique">
     <div class="grain"></div>
+    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
       <div class="txt">
-        <div class="emojirow">🛍️ 🌸 ✨</div>
-        <span class="tag">Nouveautés chaque semaine</span>
-        <h1>Rendez-vous sur igscustom.fr</h1>
-        <p class="lead">Découvre toute la boutique en ligne — collections limitées imaginées par des créateurs locaux.</p>
+        <div class="emojirow">IGS CUSTOM BAR</div>
+        <span class="tag">NOUVEAUTÉS & COLLECTIONS</span>
+        <h1>Les dernières<br><span class="accent">créations.</span></h1>
+        <p class="lead">Découvre nos créations et collections disponibles directement sur notre boutique en ligne.</p>
         <div class="qrblock">
           <div class="qrbox"><img id="qr-boutique" alt="QR code boutique en ligne"></div>
-          <div class="txt2">📱 Scanne pour voir toute la boutique</div>
+          <div class="txt2">SCANNE POUR DÉCOUVRIR</div>
         </div>
       </div>
       <div class="gallery" id="gallery"></div>
@@ -258,6 +307,7 @@ const CONFIG = {
   <!-- Slide 4 — Avis Google -->
   <section class="slide" id="s-avis">
     <div class="grain"></div>
+    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
       <div class="left">
         <div class="glabel">
@@ -265,13 +315,13 @@ const CONFIG = {
           <span class="gtext">Avis Google</span>
         </div>
         <div class="stat"><span class="num" id="avis-rating"></span><span class="cnt" id="avis-count"></span></div>
-        <div class="quote" id="avis-text">Merci à nos client·es pour leur confiance 💛</div>
+        <div class="quote" id="avis-text">Merci à nos client·es pour leur confiance.</div>
         <div class="author" id="avis-author"></div>
       </div>
       <div class="right">
         <div class="qrbox"><img id="qr-review" alt="QR code laisser un avis"></div>
         <div class="stars">★★★★★</div>
-        <div class="cta">✍️ Toi aussi, laisse ton avis</div>
+        <div class="cta">Ton expérience compte.<br>Scanne et laisse-nous ton avis.</div>
       </div>
     </div>
   </section>
@@ -279,9 +329,10 @@ const CONFIG = {
   <!-- Slide 5 — Suis-nous -->
   <section class="slide" id="s-social">
     <div class="grain"></div>
+    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
-      <span class="tag">📱 Suis-nous</span>
-      <h1>Reste connecté à l'univers IGS</h1>
+      <span class="tag">SUIVEZ-NOUS</span>
+      <h1>Entre dans<br>l'univers <span class="accent">IGS.</span></h1>
       <div class="qr-row" style="margin-top:4vh">
         <div class="qr-item">
           <div class="icon-circle" style="background:linear-gradient(45deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5)">📸</div>
