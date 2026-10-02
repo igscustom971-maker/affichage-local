@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IGS Custom Bar — Afficheur</title>
+<title>IGS Custom Bar — Afficheur V5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -105,10 +105,6 @@ p.lead{
 #s-hero h1{font-size:7.5vw;color:var(--navy);max-width:8.5ch}
 #s-hero h1 span{color:var(--pink)}
 #s-hero .lead{max-width:42ch}
-#s-hero .loc{
-  position:absolute;left:7vw;bottom:5vh;z-index:5;font-size:1vw;
-  color:var(--muted);font-weight:600;
-}
 #s-hero .heroimg{
   position:absolute;right:7vw;top:18vh;width:31vw;max-height:67vh;
   object-fit:contain;z-index:2;
@@ -188,11 +184,26 @@ p.lead{
 #s-avis .stat .cnt{font-size:1.25vw;color:var(--muted);font-weight:600}
 #s-avis .quote{font-size:2.1vw;line-height:1.25;font-weight:600;max-width:24ch}
 #s-avis .author{color:var(--muted);font-size:1vw;margin-top:1.7vh}
-#s-avis .right{text-align:center}
-#s-avis .qrbox{background:#fff;padding:1.3vw;border-radius:25px;box-shadow:0 20px 45px rgba(30,30,75,.12)}
-#s-avis .qrbox img{display:block;width:15vw;height:15vw}
-#s-avis .stars{color:var(--orange);font-size:1.7vw;letter-spacing:.15em;margin-top:1vh}
-#s-avis .cta{font-size:1.15vw;font-weight:700;margin-top:1vh}
+#s-avis .right{
+  width:27vw;max-width:27vw;min-width:25vw;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2.8vh 2vw;
+}
+#s-avis .right .review-qr-title{
+  color:var(--navy);font-size:1.25vw;font-weight:800;
+  letter-spacing:.04em;margin-bottom:1.5vh;
+}
+#s-avis .right .qrbox{
+  background:#fff;padding:1vw;border-radius:22px;
+  box-shadow:0 18px 40px rgba(30,30,75,.13);
+}
+#s-avis .right .qrbox img{display:block;width:13.5vw;height:13.5vw}
+#s-avis .stars{color:var(--orange);font-size:1.55vw;letter-spacing:.12em;margin-top:1.5vh}
+#s-avis .cta{
+  color:var(--navy);font-size:1.05vw;line-height:1.45;
+  font-weight:700;margin-top:.8vh;
+}
+#s-avis .right.content-panel{background:rgba(247,240,228,.94)}
 
 /* SOCIAL */
 #s-social .slide-inner{align-items:center;text-align:center}
@@ -284,7 +295,6 @@ const CONFIG = {
         <p class="lead">Impression DTF, textile personnalisé et créations sur mesure. Donne vie à tes idées avec IGS Custom Bar.</p>
       </div>
     </div>
-    <div class="loc">📍 62 Rue Louis Vatable — Pointe-à-Pitre</div>
   </section>
 
   <!-- Slide 2 — Configurateur -->
@@ -335,10 +345,11 @@ const CONFIG = {
         <div class="quote" id="avis-text">Merci à nos client·es pour leur confiance.</div>
         <div class="author" id="avis-author"></div>
       </div>
-      <div class="right">
+      <div class="right content-panel">
+        <div class="review-qr-title">VOTRE AVIS COMPTE</div>
         <div class="qrbox"><img id="qr-review" alt="QR code laisser un avis"></div>
         <div class="stars">★★★★★</div>
-        <div class="cta">Ton expérience compte.<br>Scanne et laisse-nous ton avis.</div>
+        <div class="cta">Scannez le QR code<br>et laissez-nous votre avis.</div>
       </div>
     </div>
   </section>
