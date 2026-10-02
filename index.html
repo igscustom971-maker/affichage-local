@@ -34,13 +34,9 @@ html,body{
 #carousel::-webkit-scrollbar{display:none}
 .slide{
   position:relative;flex:0 0 100vw;width:100vw;height:100vh;
-  scroll-snap-align:start;overflow:hidden;background:var(--cream);
+  scroll-snap-align:start;overflow:hidden;background:var(--cream) url("./igs-fond-beige.png") center/cover no-repeat;
 }
-.tropical-deco{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  z-index:1;pointer-events:none;user-select:none;
-  opacity:.96;
-}
+.tropical-deco{display:none}
 .slide::before{
   content:"";position:absolute;width:43vw;height:43vw;border-radius:50%;
   right:-18vw;top:-20vw;background:rgba(255,30,142,.10);
@@ -72,7 +68,7 @@ h1{
   letter-spacing:.01em;
 }
 p.lead{
-  color:var(--muted);font-size:1.35vw;line-height:1.45;max-width:47ch;
+  color:var(--ink);font-size:1.35vw;line-height:1.45;max-width:47ch;
   margin-top:2vh;font-weight:500;
 }
 .accent{color:var(--pink)}
@@ -81,6 +77,29 @@ p.lead{
   border:1px solid rgba(30,30,75,.10);box-shadow:0 8px 20px rgba(30,30,75,.07);
   color:var(--navy);font-size:.95vw;font-weight:700;
 }
+
+/* LISIBILITÉ DU CONTENU */
+.content-panel{
+  position:relative;z-index:4;
+  background:rgba(247,240,228,.90);
+  border:1px solid rgba(30,30,75,.06);
+  border-radius:30px;
+  padding:3.2vh 3vw;
+  box-shadow:0 18px 50px rgba(30,30,75,.08);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+#s-hero .content-panel{max-width:49vw;padding:4vh 3.2vw}
+#s-config .content-panel,#s-boutique .content-panel{max-width:43vw}
+#s-avis .content-panel{max-width:54vw}
+#s-social .content-panel{min-width:54vw}
+
+
+.content-panel .lead,.content-panel .txt2,.content-panel .author,.content-panel .gtext,.content-panel .cnt,.content-panel .handle{
+  text-shadow:none;
+}
+.content-panel h1{position:relative;z-index:2}
+.content-panel .tag,.content-panel .qrblock,.content-panel .qr-row{position:relative;z-index:3}
 
 /* HERO */
 #s-hero h1{font-size:7.5vw;color:var(--navy);max-width:8.5ch}
@@ -254,15 +273,16 @@ const CONFIG = {
   <!-- Slide 1 — Hero -->
   <section class="slide" id="s-hero">
     <div class="grain"></div>
-    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <img class="logo-badge" src="https://igscustom.fr/wp-content/uploads/2026/05/IGS-CUSTOM-BAR-LOGO.png" alt="IGS Custom Bar">
     <div class="hero-orbit"></div>
 <img class="heroimg" src="https://igscustom.fr/wp-content/uploads/2026/03/tshirt-perso-compresse-1024x1024.png" alt="">
 <div class="hero-sticker">CRÉE<br>TON<br>STYLE</div>
     <div class="slide-inner">
-      <span class="tag">🌺 Personnalisation textile</span>
-      <h1>Exprime<br>ton <span>style.</span></h1>
-      <p class="lead">Impression DTF, textile personnalisé et créations sur mesure. Donne vie à tes idées avec IGS Custom Bar.</p>
+      <div class="content-panel">
+        <span class="tag">🌺 Personnalisation textile</span>
+        <h1>Exprime<br>ton <span>style.</span></h1>
+        <p class="lead">Impression DTF, textile personnalisé et créations sur mesure. Donne vie à tes idées avec IGS Custom Bar.</p>
+      </div>
     </div>
     <div class="loc">📍 62 Rue Louis Vatable — Pointe-à-Pitre</div>
   </section>
@@ -270,9 +290,8 @@ const CONFIG = {
   <!-- Slide 2 — Configurateur -->
   <section class="slide" id="s-config">
     <div class="grain"></div>
-    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
-      <div class="txt">
+      <div class="txt content-panel">
         <span class="tag">CRÉATION EN LIGNE</span>
         <h1>Ton design.<br><span class="accent">Ton style.</span></h1>
         <p class="lead">Choisis ton produit, ta couleur et ajoute ton design. Visualise ton projet directement avant de commander.</p>
@@ -288,9 +307,8 @@ const CONFIG = {
   <!-- Slide 3 — Boutique en ligne -->
   <section class="slide" id="s-boutique">
     <div class="grain"></div>
-    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
-      <div class="txt">
+      <div class="txt content-panel">
         <div class="emojirow">IGS CUSTOM BAR</div>
         <span class="tag">NOUVEAUTÉS & COLLECTIONS</span>
         <h1>Les dernières<br><span class="accent">créations.</span></h1>
@@ -307,9 +325,8 @@ const CONFIG = {
   <!-- Slide 4 — Avis Google -->
   <section class="slide" id="s-avis">
     <div class="grain"></div>
-    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
-      <div class="left">
+      <div class="left content-panel">
         <div class="glabel">
           <span class="gdots"><span style="background:#4285F4"></span><span style="background:#EA4335"></span><span style="background:#FBBC05"></span><span style="background:#34A853"></span></span>
           <span class="gtext">Avis Google</span>
@@ -329,9 +346,9 @@ const CONFIG = {
   <!-- Slide 5 — Suis-nous -->
   <section class="slide" id="s-social">
     <div class="grain"></div>
-    <img class="tropical-deco" src="./igs-decorations.png" alt="">
     <div class="slide-inner">
-      <span class="tag">SUIVEZ-NOUS</span>
+      <div class="content-panel">
+        <span class="tag">SUIVEZ-NOUS</span>
       <h1>Entre dans<br>l'univers <span class="accent">IGS.</span></h1>
       <div class="qr-row" style="margin-top:4vh">
         <div class="qr-item">
@@ -350,6 +367,7 @@ const CONFIG = {
           <div class="label">TikTok</div><div class="handle">@igs_custom_bar</div>
         </div>
       </div>
+      </div>
     </div>
   </section>
 
@@ -362,21 +380,6 @@ const CONFIG = {
 <script>
   const carousel = document.getElementById('carousel');
   const slides = Array.from(document.querySelectorAll('.slide'));
-
-  // ---- éléments décoratifs (blobs) ----
-  slides.forEach((s, i) => {
-    const colors = ['var(--pink)', 'var(--navy)', 'var(--orange)', 'var(--yellow)'];
-    for (let j = 0; j < 3; j++) {
-      const b = document.createElement('div');
-      b.className = 'blob';
-      const size = 18 + Math.random() * 20;
-      b.style.width = size + 'vw'; b.style.height = size + 'vw';
-      b.style.background = colors[(i + j) % colors.length];
-      b.style.top = (Math.random() * 80) + '%';
-      b.style.left = (Math.random() * 80) + '%';
-      s.appendChild(b);
-    }
-  });
 
   // ---- Boutique : dernières créations (remplace/ajoute des entrées ici) ----
   const PRODUCTS = [
