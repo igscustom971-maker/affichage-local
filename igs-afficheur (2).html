@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGS Custom Bar — Afficheur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #171B36;
+    --bg2: #2A1140;
+    --pink: #FF1E8E;
+    --navy: #3E63F0;
+    --orange: #FF8A3D;
+    --yellow: #FFD23F;
+    --paper: #FFF8ED;
+    --muted: #B9B6DC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--paper);
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+  }
+
+  #carousel {
+    display: flex;
+    width: 100vw; height: 100vh;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    cursor: grab;
+  }
+  #carousel.dragging { cursor: grabbing; scroll-behavior: auto; }
+  #carousel::-webkit-scrollbar { display: none; }
+
+  .slide {
+    position: relative;
+    flex: 0 0 100vw; width: 100vw; height: 100vh;
+    scroll-snap-align: start;
+    background: radial-gradient(ellipse at 20% 20%, var(--bg2) 0%, var(--bg) 55%);
+  }
+
+  .grain {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.45; pointer-events: none; }
+
+  .slide-inner {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    padding: 6vh 6vw;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 0.4em;
+    font-size: 1.1vw; letter-spacing: 0.02em;
+    color: var(--paper); background: linear-gradient(120deg, var(--pink), var(--navy));
+    padding: 0.5em 1.1em; margin-bottom: 2vh;
+    align-self: flex-start;
+    font-weight: 600; border-radius: 100px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+  }
+
+  p.lead { font-size: 1.5vw; color: var(--muted); max-width: 46ch; margin-top: 1.6vh; font-weight: 400; }
+
+  .logo-badge { position: absolute; top: 5vh; right: 6vw; z-index: 3; height: 6vh; opacity: 0.95; border-radius: 50%; }
+
+  /* ---- Slide 1 : Hero ---- */
+  #s-hero .heroimg {
+    position: absolute; right: 3vw; bottom: 4vh; width: 20vw; z-index: 1;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+    opacity: 0.97;
+  }
+  #s-hero h1 { font-size: 7.6vw; color: var(--paper); }
+  #s-hero h1 span { color: var(--pink); }
+  #s-hero .loc { position: absolute; bottom: 6vh; left: 6vw; font-size: 1.2vw; color: var(--muted); z-index: 2; }
+
+  /* ---- Slide 2 : Configurateur ---- */
+  #s-config .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 3vw; }
+  #s-config .txt { max-width: 34vw; }
+  #s-config h1 { font-size: 3.8vw; }
+  #s-config .shot {
+    border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    border: 4px solid rgba(255,255,255,0.12);
+    width: 34vw;
+  }
+  #s-config .shot img { width: 100%; display: block; }
+  #s-config .qrblock { display: flex; align-items: center; gap: 1vw; margin-top: 3vh; }
+  #s-config .qrbox { background: var(--paper); padding: 0.8vw; border-radius: 14px; }
+  #s-config .qrbox img { display: block; width: 7vw; height: 7vw; }
+  #s-config .qrblock .txt2 { font-size: 1.15vw; color: var(--muted); max-width: 16ch; }
+
+  /* ---- Slide 3 : Boutique en ligne ---- */
+  #s-boutique .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 3vw; }
+  #s-boutique .txt { max-width: 26vw; }
+  #s-boutique h1 { font-size: 4vw; }
+  #s-boutique .emojirow { font-size: 2.4vw; margin-bottom: 1.5vh; }
+  #s-boutique .qrblock { display: flex; align-items: center; gap: 1vw; margin-top: 3vh; }
+  #s-boutique .qrbox { background: var(--paper); padding: 0.8vw; border-radius: 14px; }
+  #s-boutique .qrbox img { display: block; width: 7vw; height: 7vw; }
+  #s-boutique .qrblock .txt2 { font-size: 1.15vw; color: var(--muted); max-width: 16ch; }
+  #s-boutique .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2vw; width: 34vw; }
+  #s-boutique .card { border-radius: 18px; overflow: hidden; background: #1F2444; position: relative; aspect-ratio: 3/4; }
+  #s-boutique .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #s-boutique .card .price {
+    position: absolute; bottom: 0.7vw; left: 0.7vw;
+    background: var(--paper); color: var(--bg);
+    font-size: 0.9vw; font-weight: 700; padding: 0.3em 0.8em; border-radius: 100px;
+  }
+
+  /* ---- Slide 4 : Avis Google ---- */
+  #s-avis .slide-inner { flex-direction: row; align-items: center; justify-content: space-between; }
+  #s-avis .left { max-width: 50vw; }
+  #s-avis .glabel { display: flex; align-items: center; gap: 0.6vw; margin-bottom: 1.5vh; }
+  #s-avis .gdots { display: flex; gap: 3px; }
+  #s-avis .gdots span { width: 0.8vw; height: 0.8vw; border-radius: 50%; display: inline-block; }
+  #s-avis .glabel .gtext { font-size: 1.3vw; font-weight: 600; color: var(--muted); }
+  #s-avis .stat { display: flex; align-items: baseline; gap: 0.6vw; margin-bottom: 2vh; }
+  #s-avis .stat .num { font-family: 'Bebas Neue', sans-serif; font-size: 5.5vw; color: var(--yellow); line-height: 1; }
+  #s-avis .stat .cnt { font-size: 1.3vw; color: var(--muted); }
+  #s-avis .quote { font-size: 2vw; line-height: 1.3; font-weight: 500; }
+  #s-avis .author { color: var(--muted); font-size: 1.1vw; margin-top: 2vh; }
+  #s-avis .right { text-align: center; }
+  #s-avis .qrbox { background: var(--paper); padding: 1.6vw; border-radius: 22px; display: inline-block; }
+  #s-avis .qrbox img { display: block; width: 16vw; height: 16vw; }
+  #s-avis .cta { font-size: 1.25vw; font-weight: 600; margin-top: 1.4vh; }
+  #s-avis .stars { color: var(--yellow); font-size: 1.7vw; letter-spacing: 0.15em; margin-top: 0.8vh; }
+
+  /* ---- Slide 5 : Suis-nous ---- */
+  #s-social .slide-inner { align-items: center; text-align: center; }
+  #s-social h1 { font-size: 4vw; margin-bottom: 4vh; max-width: 18ch; }
+  .qr-row { display: flex; gap: 2.5vw; justify-content: center; }
+  .qr-item { text-align: center; }
+  .qr-item .icon-circle {
+    width: 4.5vw; height: 4.5vw; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2vw; margin: 0 auto 1.2vh;
+  }
+  .qr-item .qrbox { background: var(--paper); padding: 1vw; border-radius: 16px; }
+  .qr-item .qrbox img { display: block; width: 9.5vw; height: 9.5vw; }
+  .qr-item .label { margin-top: 1.2vh; font-size: 1.2vw; font-weight: 600; }
+  .qr-item .handle { font-size: 0.95vw; color: var(--muted); }
+
+  /* ---- Navigation ---- */
+  .navbtn {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 3.2vw; height: 3.2vw; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: none; color: var(--paper);
+    font-size: 1.6vw; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 10; backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  .navbtn:hover { background: rgba(255,255,255,0.25); }
+  #prevBtn { left: 2vw; }
+  #nextBtn { right: 2vw; }
+
+  .dots { position: fixed; bottom: 3vh; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); cursor: pointer; border: none; }
+  .dot.active { background: var(--pink); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- CONFIG — modifie ce qu'il y a ici pour personnaliser l'afficheur -->
+<!-- ============================================================ -->
+<script>
+const CONFIG = {
+  autoplay: true,
+  slideDuration: 8,
+  resumeAfter: 15,
+
+  instaUrl: "https://www.instagram.com/igs_custom_bar/",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61567191273299",
+  tiktokUrl: "https://www.tiktok.com/@igs_custom_bar",
+  configUrl: "https://igscustom.fr/personnalisation/",
+  boutiqueUrl: "https://igscustom.fr/boutique/",
+  reviewUrl: "https://g.page/r/CWIVVFwaHQYBEBM/review",
+
+  // --- Avis Google en direct ---
+  // La page reste en local sur le NUC, aucun souci : seul ce flux a besoin
+  // d'être accessible sur internet (ex: hébergé sur ton Hostinger existant,
+  // voir google-avis-proxy.php fourni à côté). Laisse vide pour garder la
+  // note statique ci-dessous.
+  reviewsFeedUrl: "",
+  fallbackRating: "4.9",
+  fallbackCount: "25 avis Google"
+};
+</script>
+
+<div id="carousel">
+
+  <!-- Slide 1 — Hero -->
+  <section class="slide" id="s-hero">
+    <div class="grain"></div>
+    <img class="logo-badge" src="https://igscustom.fr/wp-content/uploads/2026/05/IGS-CUSTOM-BAR-LOGO.png" alt="IGS Custom Bar">
+    <img class="heroimg" src="https://igscustom.fr/wp-content/uploads/2026/03/tshirt-perso-compresse-1024x1024.png" alt="">
+    <div class="slide-inner">
+      <span class="tag">🌺 Personnalisation textile</span>
+      <h1>Express<br>Yourself,<br><span>crée ton style.</span></h1>
+      <p class="lead">🎨 Impression DTF, collections limitées, livrées en Guadeloupe, Martinique, Guyane et dans toute la Caraïbe.</p>
+    </div>
+    <div class="loc">📍 62 Rue Louis Vatable — Pointe-à-Pitre</div>
+  </section>
+
+  <!-- Slide 2 — Configurateur -->
+  <section class="slide" id="s-config">
+    <div class="grain"></div>
+    <div class="slide-inner">
+      <div class="txt">
+        <span class="tag">✨ En ligne</span>
+        <h1>Compose ta pièce et vois l'aperçu en direct</h1>
+        <p class="lead">🖌️ Choisis ton produit, ta couleur, ajoute ton design — sans minimum de commande.</p>
+        <div class="qrblock">
+          <div class="qrbox"><img id="qr-config" alt="QR code configurateur"></div>
+          <div class="txt2">📱 Scanne pour essayer depuis ton téléphone</div>
+        </div>
+      </div>
+      <div class="shot"><img src="igs-configurateur-preview.png" alt="Aperçu du configurateur en ligne"></div>
+    </div>
+  </section>
+
+  <!-- Slide 3 — Boutique en ligne -->
+  <section class="slide" id="s-boutique">
+    <div class="grain"></div>
+    <div class="slide-inner">
+      <div class="txt">
+        <div class="emojirow">🛍️ 🌸 ✨</div>
+        <span class="tag">Nouveautés chaque semaine</span>
+        <h1>Rendez-vous sur igscustom.fr</h1>
+        <p class="lead">Découvre toute la boutique en ligne — collections limitées imaginées par des créateurs locaux.</p>
+        <div class="qrblock">
+          <div class="qrbox"><img id="qr-boutique" alt="QR code boutique en ligne"></div>
+          <div class="txt2">📱 Scanne pour voir toute la boutique</div>
+        </div>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <!-- Slide 4 — Avis Google -->
+  <section class="slide" id="s-avis">
+    <div class="grain"></div>
+    <div class="slide-inner">
+      <div class="left">
+        <div class="glabel">
+          <span class="gdots"><span style="background:#4285F4"></span><span style="background:#EA4335"></span><span style="background:#FBBC05"></span><span style="background:#34A853"></span></span>
+          <span class="gtext">Avis Google</span>
+        </div>
+        <div class="stat"><span class="num" id="avis-rating"></span><span class="cnt" id="avis-count"></span></div>
+        <div class="quote" id="avis-text">Merci à nos client·es pour leur confiance 💛</div>
+        <div class="author" id="avis-author"></div>
+      </div>
+      <div class="right">
+        <div class="qrbox"><img id="qr-review" alt="QR code laisser un avis"></div>
+        <div class="stars">★★★★★</div>
+        <div class="cta">✍️ Toi aussi, laisse ton avis</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 5 — Suis-nous -->
+  <section class="slide" id="s-social">
+    <div class="grain"></div>
+    <div class="slide-inner">
+      <span class="tag">📱 Suis-nous</span>
+      <h1>Reste connecté à l'univers IGS</h1>
+      <div class="qr-row" style="margin-top:4vh">
+        <div class="qr-item">
+          <div class="icon-circle" style="background:linear-gradient(45deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5)">📸</div>
+          <div class="qrbox"><img id="qr-insta" alt="QR Instagram"></div>
+          <div class="label">Instagram</div><div class="handle">@igs_custom_bar</div>
+        </div>
+        <div class="qr-item">
+          <div class="icon-circle" style="background:#1877F2">👍</div>
+          <div class="qrbox"><img id="qr-fb" alt="QR Facebook"></div>
+          <div class="label">Facebook</div><div class="handle">IGS Custom Bar</div>
+        </div>
+        <div class="qr-item">
+          <div class="icon-circle" style="background:linear-gradient(45deg,#25F4EE,#000,#FE2C55)">🎵</div>
+          <div class="qrbox"><img id="qr-tiktok" alt="QR TikTok"></div>
+          <div class="label">TikTok</div><div class="handle">@igs_custom_bar</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<button class="navbtn" id="prevBtn">‹</button>
+<button class="navbtn" id="nextBtn">›</button>
+<div class="dots" id="dots"></div>
+
+<script>
+  const carousel = document.getElementById('carousel');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+
+  // ---- éléments décoratifs (blobs) ----
+  slides.forEach((s, i) => {
+    const colors = ['var(--pink)', 'var(--navy)', 'var(--orange)', 'var(--yellow)'];
+    for (let j = 0; j < 3; j++) {
+      const b = document.createElement('div');
+      b.className = 'blob';
+      const size = 18 + Math.random() * 20;
+      b.style.width = size + 'vw'; b.style.height = size + 'vw';
+      b.style.background = colors[(i + j) % colors.length];
+      b.style.top = (Math.random() * 80) + '%';
+      b.style.left = (Math.random() * 80) + '%';
+      s.appendChild(b);
+    }
+  });
+
+  // ---- Boutique : dernières créations (remplace/ajoute des entrées ici) ----
+  const PRODUCTS = [
+    { name: "Deep Impact", price: "27,99 €", img: "https://igscustom.fr/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-19-at-19.27.43-600x600.jpeg" },
+    { name: "Lazy Chain", price: "27,99 €", img: "https://igscustom.fr/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-19-at-19.26.05-300x300.jpeg" },
+    { name: "Lazy Covert Art", price: "27,99 €", img: "https://igscustom.fr/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-19-at-19.17.31-300x300.jpeg" },
+    { name: "Smooth Impact", price: "27,99 €", img: "https://igscustom.fr/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-19-at-19.15.57-300x300.jpeg" }
+  ];
+  const galleryEl = document.getElementById('gallery');
+  PRODUCTS.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `<img src="${p.img}" alt="${p.name}"><div class="price">${p.price}</div>`;
+    galleryEl.appendChild(div);
+  });
+
+  // ---- QR codes ----
+  const qr = (url) => `https://api.qrserver.com/v1/create-qr-code/?size=400x400&bgcolor=FFF8ED&color=171B36&data=${encodeURIComponent(url)}`;
+  document.getElementById('qr-insta').src = qr(CONFIG.instaUrl);
+  document.getElementById('qr-fb').src = qr(CONFIG.facebookUrl);
+  document.getElementById('qr-tiktok').src = qr(CONFIG.tiktokUrl);
+  document.getElementById('qr-config').src = qr(CONFIG.configUrl);
+  document.getElementById('qr-boutique').src = qr(CONFIG.boutiqueUrl);
+  document.getElementById('qr-review').src = qr(CONFIG.reviewUrl);
+
+  // ---- Avis Google : flux live si CONFIG.reviewsFeedUrl est renseigné, sinon repli statique ----
+  let liveReviews = [];
+  let avisIdx = 0;
+
+  function renderAvis() {
+    document.getElementById('avis-rating').textContent = CONFIG.fallbackRating + ' ★';
+    document.getElementById('avis-count').textContent = CONFIG.fallbackCount;
+    if (liveReviews.length) {
+      const r = liveReviews[avisIdx % liveReviews.length];
+      document.getElementById('avis-text').textContent = `“${r.text}”`;
+      document.getElementById('avis-author').textContent = r.author || '';
+      avisIdx++;
+    }
+  }
+
+  if (CONFIG.reviewsFeedUrl) {
+    fetch(CONFIG.reviewsFeedUrl)
+      .then(r => r.json())
+      .then(data => {
+        if (data.rating) CONFIG.fallbackRating = String(data.rating);
+        if (data.userRatingCount) CONFIG.fallbackCount = data.userRatingCount + ' avis Google';
+        if (Array.isArray(data.reviews)) liveReviews = data.reviews;
+        renderAvis();
+      })
+      .catch(() => renderAvis());
+  } else {
+    renderAvis();
+  }
+
+  // ---- Dots ----
+  const dotsEl = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+  const dots = Array.from(document.querySelectorAll('.dot'));
+
+  let current = 0;
+  function updateActive(i) {
+    current = i;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    if (slides[i].id === 's-avis') renderAvis();
+  }
+  function goTo(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    carousel.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' });
+    updateActive(i);
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => { goTo(current - 1); userInteracted(); });
+  document.getElementById('nextBtn').addEventListener('click', () => { goTo(current + 1); userInteracted(); });
+
+  // ---- Glisser à la souris ----
+  let isDown = false, startX = 0, startScroll = 0;
+  carousel.addEventListener('mousedown', (e) => {
+    isDown = true; carousel.classList.add('dragging');
+    startX = e.pageX; startScroll = carousel.scrollLeft;
+  });
+  window.addEventListener('mouseup', () => { isDown = false; carousel.classList.remove('dragging'); snapToNearest(); });
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    carousel.scrollLeft = startScroll - (e.pageX - startX);
+    userInteracted();
+  });
+  function snapToNearest() {
+    const i = Math.round(carousel.scrollLeft / window.innerWidth);
+    goTo(i);
+  }
+
+  let scrollTimeout;
+  carousel.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const i = Math.round(carousel.scrollLeft / window.innerWidth);
+      updateActive(i);
+    }, 100);
+  });
+
+  let autoplayTimer, resumeTimer;
+  function startAutoplay() {
+    if (!CONFIG.autoplay) return;
+    clearInterval(autoplayTimer);
+    autoplayTimer = setInterval(() => {
+      goTo((current + 1) % slides.length);
+    }, CONFIG.slideDuration * 1000);
+  }
+  function userInteracted() {
+    clearInterval(autoplayTimer);
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(startAutoplay, CONFIG.resumeAfter * 1000);
+  }
+  carousel.addEventListener('wheel', userInteracted, { passive: true });
+  startAutoplay();
+</script>
+
+</body>
+</html>
